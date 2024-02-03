@@ -1,27 +1,14 @@
-import {API_KEY} from "./config";
-import {ChatOpenAI} from '@langchain/openai';
-import {HumanMessage, SystemMessage} from '@langchain/core/messages';
+import {HuggingFaceInference} from '@langchain/community/llms/hf';
+import {HUGGING_FACE_API_KEY} from "./config";
 
 (async () => {
 
-    const chat = new ChatOpenAI({
-        openAIApiKey: API_KEY,
-        modelName: 'gpt-4-turbo-preview',
-    }, {
-        baseURL
+    const model = new HuggingFaceInference({
+        endpointUrl: 'https://n1s5wwh2896n0io6.us-east-1.aws.endpoints.huggingface.cloud',
+        apiKey: HUGGING_FACE_API_KEY,
     });
-
-    const ans = await chat.invoke([
-        new SystemMessage('Jesteś AI, który zawsze odpowiada zabawnie i z przytupem!'),
-        new HumanMessage('Cześć, kim jesteś?'),
-    ], {
-        functions: {
-            xyz: {
-
-            }
-        },
-    });
-
-    console.log(ans.additional_kwargs.function_call.);
+    console.log('Asking...');
+    const text = await model.invoke('What language model are you?');
+    console.log(text);
 
 })();
